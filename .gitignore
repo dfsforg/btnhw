@@ -8,6 +8,7 @@
 ### Eclipse template
 
 .metadata
+**/tmp/
 tmp/
 *.tmp
 *.bak
