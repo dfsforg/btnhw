@@ -42,8 +42,8 @@ if [ "$MODE" = "sign" ]; then
     echo "Signing the data..."
 fi
 
-if [ "$MODE" = "submit" ]; then
-    echo "Submitting the data..."
+if [ "$MODE" = "test" ]; then
+    echo "Running deploy+transfer test..."
     rm ./tmp/*
     npx hardhat node &
     npx hardhat compile
@@ -67,10 +67,26 @@ if [ "$MODE" = "submit" ]; then
     openssl pkeyutl -verify -pubin -inkey tmp/1pub.pem -in tmp/submit_unsigned_tnx_hash_bin -sigfile tmp/signature_openssl.der
 
     python3 ./tnxmaster.py
+    #sudo service pcscd stop
 
     npx hardhat run --network hardhat scripts/send_tnx.ts
 
-    npx hardhat --version
+    #npx hardhat --version
+    rm ./tmp/*
+
+    npx hardhat run --network localhost scripts/unsigned_erc20_transfer.ts
+    pkcs11-tool --read-object --pin $PIN --id $ID --type pubkey > tmp/1pub.der
+    openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text > tmp/1pub.pem
+    openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text | grep "    " | tr -d ' :\n' | cut -c 3- > tmp/1pub.eth
+
+    pkcs11-tool  --sign --pin $PIN --id $ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature_openssl.der --signature-format openssl
+    pkcs11-tool --sign --pin $PIN --id $ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature.der
+    openssl pkeyutl -verify -pubin -inkey tmp/1pub.pem -in tmp/submit_unsigned_tnx_hash_bin -sigfile tmp/signature_openssl.der
+
+    python3 ./tnxmaster.py
+    #sudo service pcscd stop
+
+    npx hardhat run --network hardhat scripts/send_tnx.ts
 
 fi
 

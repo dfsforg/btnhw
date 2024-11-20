@@ -8,7 +8,7 @@ contract TestToken is ERC20 {
     uint256 constant initialSupply = 1000000 * (10**18);
 
     // Constructor will be called on contract creation
-    constructor() ERC20("FunToken", "FUN") {
+    constructor() ERC20("TestToken", "TEST") {
         _mint(msg.sender, initialSupply);
     }
 }
