@@ -374,3 +374,4 @@ node_modules
 **/node_modules
 bin_output
 logs
+**/0x*
