@@ -1,0 +1,26 @@
+version: '3'
+services:
+    hw:
+        privileged: true
+        container_name: hw
+        image: operator-operator:latest
+        environment:
+            - MODE=${MODE}
+        build:
+            context: ./hw
+        env_file:
+            - ./hw/.env
+
+        user: ${CURRENT_UID}
+        volumes:
+            - ./hw:/hw:consistent
+            - /dev/bus/usb:/dev/bus/usb:consistent
+        entrypoint: /hw/start.sh
+        deploy:
+            resources:
+                limits:
+                    cpus: '2'
+                    memory: 4G
+
+
+
