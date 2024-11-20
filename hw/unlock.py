@@ -136,7 +136,7 @@ class Config:
 
 
 device_config = Config()
-device_config.loadConfig(os.getenv('SIGNER_ADDRESS'))
+device_config.loadConfig(os.getenv('SIGNER'))
 
 device = PicoHSM(device_config.PIN)
 slck = SecureLock2(device,device_config.HSM_ACCESS_KEY)
