@@ -93,7 +93,7 @@ class Config:
         self.SOPIN = ''.join(random.choices('0123456789', k=10))
         self.OPTIONS = 0x0001
         self.RETRIES = 3
-        self.ETH_SECRET_KEY = bytes.fromhex('ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80')
+        self.ETH_SECRET_KEY = bytes.fromhex('7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6')
         #self.ETH_SECRET_KEY = secrets.token_bytes(32)
         self.ETH_ADDRESS = Account.from_key("0x" +  binascii.hexlify(self.ETH_SECRET_KEY).decode('utf-8'))
         self.KEY_ID = 0

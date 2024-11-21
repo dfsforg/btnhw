@@ -49,15 +49,21 @@ if [ "$MODE" = "test" ]; then
     npx hardhat compile
 
     #building transaction
-    npx hardhat run --network hardhat scripts/unsigned_deploy.ts
+
 
     #signing transaction
     PIN=$(jq -r '.PIN' $SIGNER)
     ID=$(jq -r '.KEY_ID' $SIGNER)
+
+    sudo rm /run/pcscd/pcscd.comm
     sudo service pcscd start
-    sleep 3
+    #sudo pcscd --foreground  &
+    #sleep 3
     python3 ./unlock.py
-    #sudo /usr/local/bin/pkcs11-tool -O
+    sudo /usr/local/bin/pkcs11-tool -O
+    #sudo service pcscd stop
+    #exit 1
+    npx hardhat run --network localhost scripts/unsigned_deploy.ts
     pkcs11-tool --read-object --pin $PIN --id $ID --type pubkey > tmp/1pub.der
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text > tmp/1pub.pem
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text | grep "    " | tr -d ' :\n' | cut -c 3- > tmp/1pub.eth
@@ -67,9 +73,8 @@ if [ "$MODE" = "test" ]; then
     openssl pkeyutl -verify -pubin -inkey tmp/1pub.pem -in tmp/submit_unsigned_tnx_hash_bin -sigfile tmp/signature_openssl.der
 
     python3 ./tnxmaster.py
+    npx hardhat run --network localhost scripts/send_tnx.ts
     #sudo service pcscd stop
-
-    npx hardhat run --network hardhat scripts/send_tnx.ts
 
     #npx hardhat --version
     rm ./tmp/*
@@ -85,14 +90,15 @@ if [ "$MODE" = "test" ]; then
 
     python3 ./tnxmaster.py
     #sudo service pcscd stop
-
-    npx hardhat run --network hardhat scripts/send_tnx.ts
+    npx hardhat run --network localhost scripts/send_tnx.ts
+    sudo service pcscd stop
 
 fi
 
 
 if [ "$MODE" = "inithw" ]; then
     echo "Starting HW init procedure..."
+    sudo rm /run/pcscd/pcscd.comm
     sudo service pcscd start
     pkcs11-tool -O
     data=$(python3 ./init_hw.py)

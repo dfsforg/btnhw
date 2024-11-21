@@ -198,10 +198,24 @@ def get_recovery_id(raw_unsigned_transaction, signature, public_key_bytes):
     # Split the signature into r and s components
     r = bytes_to_int(signature[:32])
     s = bytes_to_int(signature[32:])
+
+    #EIP-2
+    #https://github.com/aws-samples/aws-kms-ethereum-accounts/blob/1c11d368fd1e00f08d744acc07bbddf5a0ed5e45/aws_kms_lambda_ethereum/_lambda/functions/eth_client/lambda_helper.py#L129
+    #https://eips.ethereum.org/EIPS/eip-2
+    #https://www.secg.org/sec2-v2.pdf
+    SECP256_K1_N = int("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", 16)
+    secp256_k1_n_half = SECP256_K1_N / 2
+    if s > secp256_k1_n_half:
+        s = SECP256_K1_N - s
+
+    #repacking signature
     signature_der = sigencode_der(r, s, ecdsa.SECP256k1.order,)
 
     # Decode the DER signature
     r, s = ecdsa.util.sigdecode_der(signature_der, ecdsa.SECP256k1.order,)
+
+
+
 
     # Calculate the recovery ID
     recovery_id = None
@@ -226,6 +240,7 @@ def get_recovery_id(raw_unsigned_transaction, signature, public_key_bytes):
 
     if recovery_id is None:
         raise ValueError("Could not find the correct recovery ID.")
+
 
     return r, s, recovery_id
 

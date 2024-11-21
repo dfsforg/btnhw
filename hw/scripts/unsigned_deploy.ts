@@ -15,7 +15,7 @@ async function main() {
     // Deploy the contract
     //console.log('Deploying FunToken...');
     //const testToken = await TestToken.populateTransaction.deploy();
-    const voidSigner = new ethers.VoidSigner('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', ethers.getDefaultProvider('http://localhost:8545'));
+    const voidSigner = new ethers.VoidSigner(process.env.SIGNER, ethers.getDefaultProvider('http://127.0.0.1:8545'));
     const tnx = await TestToken.getDeployTransaction({type: 0}); //LEGACY TYPE
     //const finalTx2sign = await voidSigner.populateTransaction(tnx);
     const finalTx2sign = await voidSigner.populateTransaction(tnx);

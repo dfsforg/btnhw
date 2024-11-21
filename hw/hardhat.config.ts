@@ -84,6 +84,10 @@ module.exports = {
             //accounts: [`${MAINNET_KEY}`],
         },
 
+        holesky_testnet:{
+            url:`https://holesky.gateway.tenderly.co`
+        },
+
 
         
         

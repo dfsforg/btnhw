@@ -6,7 +6,7 @@ import fs from "fs";
 
 async function main() {
 
-    const provider = new ethers.getDefaultProvider('http://localhost:8545')
+    const provider = new ethers.getDefaultProvider('http://127.0.0.1:8545')
     let rawTnx = fs.readFileSync('./tmp/raw_signed_transaction.hex', 'utf8');
     const txResponse = await provider.sendTransaction(rawTnx);
     console.log("Transaction Hash:", txResponse.hash);

@@ -8,8 +8,10 @@ const { ethers } = require("hardhat");
 
 async function main() {
     console.log('Getting the fun token contract...');
-    const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3';
-    const testToken = await ethers.getContractAt('TestToken', contractAddress);
+    const ownerAddress = process.env.SIGNER;
+    const contractAddress = '0x057ef64e23666f000b34ae31332854acbd1c8544';
+    const voidSigner = new ethers.VoidSigner(ownerAddress, ethers.getDefaultProvider('http://127.0.0.1:8545'));
+    const testToken = await ethers.getContractAt('TestToken', contractAddress, voidSigner);
     console.log('Querying token name...');
     const name = await testToken.name();
     console.log(`Token Name: ${name}\n`);
@@ -26,22 +28,24 @@ async function main() {
     console.log(`Total Supply in FUN: ${ethers.utils.formatUnits(totalSupply, decimals)}\n`)
 
     console.log('Getting the balance of contract owner...');
-    //const signers = await ethers.getSigners();
-    const ownerAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+    //const signers = await ethers.;
+    //const ownerAddress = '0xce94011FCA92eA1907334Df66990bA3765107195';
+
     let ownerBalance = await testToken.balanceOf(ownerAddress);
     console.log(`Contract owner at ${ownerAddress} has a ${symbol} balance of ${ethers.utils.formatUnits(ownerBalance, decimals)}\n`);
 
 
     console.log('Initiating a transfer...');
 
-    const transferAmount = 100000;
-    const recipientAddress = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
-    const voidSigner = new ethers.VoidSigner(ownerAddress, ethers.getDefaultProvider('http://localhost:8545'));
-    const tnx = await testToken.populateTransaction.transfer(recipientAddress, ethers.utils.parseUnits(transferAmount.toString(), decimals),{type: 0});
+    const transferAmount = 10;
+    const testRecipientAddress = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
+
+    //const voidSigner = new ethers.VoidSigner(ownerAddress, ethers.getDefaultProvider('https://holesky.gateway.tenderly.co'));
+    const tnx = await testToken.populateTransaction.transfer(testRecipientAddress, ethers.utils.parseUnits(transferAmount.toString(), decimals),{type: 0});
     const finalTx2sign = await voidSigner.populateTransaction(tnx);
     var finalTx2signWithoutFrom = (({ from, ...rest }) => rest)(finalTx2sign);
     const serializedTx = ethers.utils.serializeTransaction(finalTx2signWithoutFrom);
-    console.log(`Transferring ${transferAmount} ${symbol} tokens to ${recipientAddress} from ${ownerAddress}`);
+    console.log(`Transferring ${transferAmount} ${symbol} tokens to ${testRecipientAddress} from ${ownerAddress}`);
     console.log(`Unsigned raw transfer tnx: ${JSON.stringify(finalTx2signWithoutFrom, null, 2)}`)
 
     const txHash = ethers.utils.keccak256(serializedTx);
