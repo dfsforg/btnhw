@@ -2,12 +2,14 @@
 
 ## 🚀 TL;DR
 
-**B.T.N.H.W** is a hardware wallet for advanced users and EVM-compatible blockchain developers. Fully opensource, customizable built on   
+B.T.N.H.W is a hardware wallet designed for advanced users and developers working with EVM-compatible blockchains.
+
+It is fully open source, highly customizable, and built on [7.85$ widely accessible components](https://www.amazon.com/Raspberry-Pi-Pico/dp/B09KVB8LVR). 
+
 
 ## 🤔 The reason
 
-Now days the common practice for blockchain developers and adanced users (who develop homegrwn tools to work with a blockchain) is to keep secret keys in ```.env``` files in plain text, configs or software wallets, 
-that makes secret keys an low hanging froot for attackers of any kind. B.T.N.H.W was made with intention to fix it (details in security section). 
+These days, it's common for blockchain developers and advanced users (who create their own tools for interacting with a blockchain) to store secret keys in plaintext .env files, configurations, or software wallets. This makes secret keys an easy target for attackers. B.T.N.H.W was created to address this issue (see the security section for details).
 
 ## 🛠️ How to use
 
@@ -33,7 +35,7 @@ Since the Raspberry Pi Pico lacks a security enclave to securely store the key i
 1. If the generated wallet configuration (or the entire workstation) is stolen along with the hardware wallet, the secret key of your wallet is fully compromised — this is game over.
 2. If the generated wallet configuration is lost, the hardware wallet becomes useless, and access to the secret key is lost forever.
 
-Since the Raspberry Pi Pico has no screen and mbedTLS (the crypto library) lacks a proper Keccak implementation, the hardware wallet signs the provided hash of a transactio. If an attacker has persistent and complete access to the workstation, they could attempt to sign a malicious hash or substitute data.
+Since the Raspberry Pi Pico has no screen (for visual confirmation) and mbedTLS (the crypto library) lacks a proper Keccak implementation, the hardware wallet signs the provided hash of a transaction. If an attacker has persistent and complete access to the workstation, they could attempt to sign a malicious hash or substitute data.
 
 
 
