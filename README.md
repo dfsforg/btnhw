@@ -13,8 +13,75 @@ These days, it's common for blockchain developers and advanced users (who create
 
 ## 🛠️ How to use
 
-Install **MyProject** using pip (if Python-based) or clone the repository for direct use.
 
+**Prepare the Pico**
+
+1. Download (or build on your own) the firmware.  Was tested with version 4.0.
+2. Patch it with a valid VID:PID . Was tested with 1050:0407.
+
+Or use the prepatred firmware from this repo.
+
+
+**Testrun of the Wallet**
+
+1. Clone the repo to your local environment.
+
+2. Connect the Pico device with the appropriate firmware installed. You should see a log entry in dmesg indicating the device has been detected.
+
+```
+[7165950.673737] usb 1-8: New USB device found, idVendor=1050, idProduct=0407, bcdDevice= 6.00
+[7165950.673746] usb 1-8: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[7165950.673752] usb 1-8: Product: Pico Key
+[7165950.673756] usb 1-8: Manufacturer: Pol Henarejos
+[7165950.673760] usb 1-8: SerialNumber: DE6398C5A3391327
+```
+
+
+3. Run docker compose build. This process can take some time, so feel free to make some coffee while you wait.
+
+4. Execute ./test.sh. This script will:
+   
+    Initialize the hardware with an unsecured known key (for testing purposes only).
+   
+    Start a local Hardhat blockchain node.
+   
+    Run a few test transactions.
+
+If everything works as expected, you should see a long log ending with something like this.
+
+```
+hw  | eth_sendRawTransaction
+hw  |   Contract call:       TestToken#transfer
+hw  |   Transaction:         0xc5668faf3f41b94d4c3fae4c8e4631854993e9d4cbf9321ada8b223bbfedd000
+hw  |   From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+hw  |   To:                  0x057ef64e23666f000b34ae31332854acbd1c8544
+hw  |   Value:               0 ETH
+hw  |   Gas used:            51541 of 51541
+hw  |   Block #2:            0x74af920b3df63288d6c0177ae236bf6915798d7ffc0136ebdbbf12c47db8d1e7
+hw  | 
+hw  | Transaction Hash: 0xc5668faf3f41b94d4c3fae4c8e4631854993e9d4cbf9321ada8b223bbfedd000
+```
+
+If there are no errors, it means that all necessary tooling is set up correctly.
+
+5. **Important:**
+Clear the Unsecure Known Key: Reinitialize the hardware to remove the unsecured known key. This step is crucial. Never use the hardware wallet with a known key outside of testing.
+
+**Initialization**
+
+You have two options for initializing the wallet:
+
+1. With a New Random Key
+Generate a new random key during initialization.
+```./init.sh ```
+
+3. Importing an Existing Key
+To import a key, use the command:
+```./init.sh /path/to/the/file/with/the/key/in/hex.key```
+
+
+
+Make sure to follow these steps carefully, especially clearing the testing key, to ensure the wallet is secure for real use.
 
 
 ## 🔒 Security 
@@ -28,7 +95,7 @@ Install **MyProject** using pip (if Python-based) or clone the repository for di
 3. Accidental sharing of the key, such as an accidental push to version control systems.
 4. Stolen workstation.
 
-**Why is it only "better than nothing"? What are the risks?**
+**Why is it "better than nothing"? What are the risks?**
 
 Since the Raspberry Pi Pico lacks a security enclave to securely store the key in an unexportable manner, all keys on the device must be encrypted. The decryption key is stored on the workstation and is required to make the hardware wallet operational. Thus, there are two main takeaways:
 
