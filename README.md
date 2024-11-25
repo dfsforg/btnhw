@@ -39,9 +39,11 @@ Or use the prepatred firmware from this repo.
 
 3. Run docker compose build. This process can take some time, so feel free to make some coffee while you wait.
 
-4. Execute ./test.sh. This script will:
-   
-    Initialize the hardware with an unsecured known key (for testing purposes only).
+5. Write  ```SIGNER=0x90F79bf6EB2c4f870365E785982E1f101E93b906``` into hw/.env file
+
+4. Execute ./inithw.sh to initialize the hardware with an unsecured known key (for testing purposes only).
+
+5. Execute ./test.sh. This script will:
    
     Start a local Hardhat blockchain node.
    
@@ -86,12 +88,22 @@ Be sure to follow these steps thoroughly, especially removing the testing key, t
 
 **Usage**
 
+Before use, you have to init wallet with 
+```./inithw.sh```
+
+then, to use generated wallet to signature, you have to write 
+```
+SIGNER=0x[new address]
+```
+into hw/.env file.
+
 You can use the tests as examples of four essential operations: 
 
 1. [How to prepare the required hash using Hardhat](https://github.com/dfsforg/btnhw/blob/main/hw/scripts/unsigned_deploy.ts)
 2. [How to sign it with B.T.N.H.W.](https://github.com/dfsforg/btnhw/blob/main/hw/start.sh#L61-L67)
 3. [How to build a valid signed transaction](https://github.com/dfsforg/btnhw/blob/main/hw/tnxmaster.py)
 4. [How to broadcast a transaction](https://github.com/dfsforg/btnhw/blob/main/hw/scripts/send_tnx.ts)
+
 
 
 ## 🔒 Security 
