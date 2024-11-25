@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 #cp -r /root/node_modules /root/synth
 npm config set update-notifier false
 
@@ -55,7 +55,8 @@ if [ "$MODE" = "test" ]; then
     PIN=$(jq -r '.PIN' $SIGNER)
     ID=$(jq -r '.KEY_ID' $SIGNER)
 
-    sudo rm /run/pcscd/pcscd.comm
+    [ -e "/run/pcscd/pcscd.comm" ] && sudo rm /run/pcscd/pcscd.comm
+    #sudo rm /run/pcscd/pcscd.comm
     sudo service pcscd start
     #sudo pcscd --foreground  &
     #sleep 3
@@ -97,14 +98,29 @@ if [ "$MODE" = "test" ]; then
 fi
 
 
-if [ "$MODE" = "inithw" ]; then
-    echo "Starting HW init procedure..."
-    sudo rm /run/pcscd/pcscd.comm
+if [ "$MODE" = "testinithw" ]; then
+    echo "Starting TEST HW init procedure..."
+    [ -e "/run/pcscd/pcscd.comm" ] && sudo rm /run/pcscd/pcscd.comm
+    #sudo rm /run/pcscd/pcscd.comm
     sudo service pcscd start
     pkcs11-tool -O
-    data=$(python3 ./init_hw.py)
-    pkcs11-tool --pin $(echo $data  | jq -r '.PIN') --id 31 --set-id 1 --type privkey
+    data=$(python3 ./init_hw.py 1 '7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6')
+    pkcs11-tool --pin $(jq -r '.PIN' $SIGNER) --id 31 --set-id 1 --type privkey
+    pkcs11-tool -O
     #pkcs11-tool --login --login-type so --so-pin $(echo $data  | jq -r '.SOPIN') --init-pin --new-pin $(echo $data  | jq -r '.PIN')
     echo $data
+
 fi
 
+if [ "$MODE" = "inithw" ]; then
+    echo "Starting HW init procedure..."
+    #sudo rm /run/pcscd/pcscd.comm
+    [ -e "/run/pcscd/pcscd.comm" ] && sudo rm /run/pcscd/pcscd.comm
+    sudo service pcscd start
+    pkcs11-tool -O
+    data=$(python3 ./init_hw.py 1 0 )
+
+    pkcs11-tool --pin $(echo $data | jq -r '.PIN') --id 31 --set-id 1 --type privkey
+    pkcs11-tool -O
+    echo $data
+fi

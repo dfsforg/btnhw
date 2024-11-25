@@ -1,6 +1,7 @@
 import pytest
 import hashlib
 import os
+import sys
 import binascii
 import json
 import random
@@ -85,7 +86,7 @@ class SecureLock2:
 
 
 class Config:
-    def __init__(self):
+    def __init__(self, testkey=False):
         self.DKEK = secrets.token_bytes(32)
         self.DKEK_SHARES = 1
         self.HSM_ACCESS_KEY = secrets.token_bytes(32)
@@ -93,8 +94,11 @@ class Config:
         self.SOPIN = ''.join(random.choices('0123456789', k=10))
         self.OPTIONS = 0x0001
         self.RETRIES = 3
-        self.ETH_SECRET_KEY = bytes.fromhex('7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6')
-        #self.ETH_SECRET_KEY = secrets.token_bytes(32)
+        if testkey:
+            print("!!DANGER!! TESTKEY IS SET!!\n")
+            self.ETH_SECRET_KEY = bytes.fromhex(testkey)
+        else:
+            self.ETH_SECRET_KEY = secrets.token_bytes(32)
         self.ETH_ADDRESS = Account.from_key("0x" +  binascii.hexlify(self.ETH_SECRET_KEY).decode('utf-8'))
         self.KEY_ID = 0
         self.CONFIGFILENAME = "./"+ self.ETH_ADDRESS.address #+"_hsm.json"
@@ -116,11 +120,11 @@ class Config:
 
 
 
-def InitDevice(device_config):
+def InitDevice(device_config,force=False):
     device = PicoHSM()
-    # if len(device.list_keys()) > 2:
-    #     print("There are keys on HW. Init procedure stopped.")
-    #     return 0
+    if len(device.list_keys()) > 2 and force==False:
+        print("There are keys on HW. Init procedure stopped.")
+        return 0
 
     device.initialize(pin=device_config.PIN,
                       sopin=device_config.SOPIN,
@@ -133,18 +137,7 @@ def InitDevice(device_config):
     slck = SecureLock2(device,device_config.HSM_ACCESS_KEY)
     slck.enable_device_aut()
     slck.unlock_device()
-    # try:
-    #     slck.enable_device_aut()
-    #     slck.unlock_device()
-    # except Exception as e:
-    #     print(e)
-    #     return e
 
-
-
-    # private_key =  secrets.token_bytes(32)
-    # account = Account.from_key("0x" +  binascii.hexlify(private_key).decode('utf-8'))
-    # #print(f"Address: {account.address}")
 
     curve=ec.SECP256K1
     pkey = ec.derive_private_key(
@@ -157,6 +150,21 @@ def InitDevice(device_config):
     device_config.safeConfig(device_config.CONFIGFILENAME)
     return device_config
 
-device_config = Config()
-InitDevice(device_config)
+if len(sys.argv) < 3:
+    force_init = False
+    testkey = False
+else:
+    if int(sys.argv[1]) == 0:
+        force_init = False
+    else:
+        force_init = True
+
+    #print(sys.argv[2])
+    if int(sys.argv[2]) == 0:
+        testkey = False
+    else:
+        testkey = sys.argv[2]
+
+device_config = Config(testkey)
+InitDevice(device_config,force_init)
 
