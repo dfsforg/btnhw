@@ -3,7 +3,7 @@ services:
     hw:
         privileged: true
         container_name: hw
-        image: operator-operator:latest
+        image: hw:latest
         environment:
             - MODE=${MODE}
         build:

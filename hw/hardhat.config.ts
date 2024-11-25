@@ -94,7 +94,7 @@ module.exports = {
         ///TESTNETS:
 
         hardhat: {
-            chainId: 6
+            chainId: 5624
         }
 
     },

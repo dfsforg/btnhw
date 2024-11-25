@@ -64,7 +64,8 @@ if [ "$MODE" = "test" ]; then
     #sudo service pcscd stop
     #exit 1
     npx hardhat run --network localhost scripts/unsigned_deploy.ts
-    pkcs11-tool --read-object --pin $PIN --id $ID --type pubkey > tmp/1pub.der
+    echo "pkcs11-tool --read-object --pin $PIN --id 0$ID --type pubkey > tmp/1pub.der"
+    pkcs11-tool --read-object --pin $PIN --id 0$ID --type pubkey > tmp/1pub.der
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text > tmp/1pub.pem
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text | grep "    " | tr -d ' :\n' | cut -c 3- > tmp/1pub.eth
 
@@ -75,7 +76,7 @@ if [ "$MODE" = "test" ]; then
     python3 ./tnxmaster.py
     npx hardhat run --network localhost scripts/send_tnx.ts
     #sudo service pcscd stop
-
+    sleep 1
     #npx hardhat --version
     rm ./tmp/*
 
@@ -103,6 +104,7 @@ if [ "$MODE" = "inithw" ]; then
     pkcs11-tool -O
     data=$(python3 ./init_hw.py)
     pkcs11-tool --pin $(echo $data  | jq -r '.PIN') --id 31 --set-id 1 --type privkey
+    #pkcs11-tool --login --login-type so --so-pin $(echo $data  | jq -r '.SOPIN') --init-pin --new-pin $(echo $data  | jq -r '.PIN')
     echo $data
 fi
 
