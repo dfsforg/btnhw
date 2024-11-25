@@ -15,7 +15,7 @@ These days, it's common for blockchain developers and advanced users (who create
 
 
 **Prepare the Pico**
-
+1. Reset your pico with [PicoNuke](https://github.com/polhenarejos/pico-nuke/releases/tag/v1.2)  
 1. Download (or build on your own) the firmware.  Was tested with version 4.0.
 2. Patch it with a valid VID:PID . Was tested with 1050:0407.
 
@@ -81,7 +81,17 @@ To import a key, use the command:
 
 
 
-Make sure to follow these steps carefully, especially clearing the testing key, to ensure the wallet is secure for real use.
+Be sure to follow these steps thoroughly, especially removing the testing key, to ensure the wallet is secure for production use.
+
+
+**Usage**
+
+You can use the tests as examples of four essential operations: 
+
+1. [How to prepare the required hash using Hardhat](https://github.com/dfsforg/btnhw/blob/main/hw/scripts/unsigned_deploy.ts)
+2. [How to sign it with B.T.N.H.W.](https://github.com/dfsforg/btnhw/blob/main/hw/start.sh#L61-L67)
+3. [How to build a valid signed transaction](https://github.com/dfsforg/btnhw/blob/main/hw/tnxmaster.py)
+4. [How to broadcast a transaction](https://github.com/dfsforg/btnhw/blob/main/hw/scripts/send_tnx.ts)
 
 
 ## 🔒 Security 
