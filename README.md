@@ -19,7 +19,7 @@ These days, it's common for blockchain developers and advanced users (who create
 1. Download (or build on your own) the firmware.  Was tested with version 4.0.
 2. Patch it with a valid VID:PID . Was tested with 1050:0407.
 
-Or use the prepatred firmware from this repo.
+Or use the [prepatred firmware from this repo](https://github.com/dfsforg/btnhw/tree/main/fw).
 
 
 **Testrun of the Wallet**
