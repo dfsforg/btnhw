@@ -25,10 +25,8 @@ from binascii import unhexlify
 import secrets
 
 
-
 from lib.bnthw import Config
 from lib.bnthw import SecureLock2
-
 
 
 

@@ -44,7 +44,8 @@ fi
 
 if [ "$MODE" = "test" ]; then
     echo "Running deploy+transfer test..."
-    rm ./tmp/*
+    [ -e "./tmp/*" ] && rm ./tmp/*
+    #rm ./tmp/*
     npx hardhat node &
     npx hardhat compile
 
