@@ -43,5 +43,5 @@ else:
         testkey = sys.argv[2]
 
 device_config = Config(testkey)
-InitDevice(device_config,force_init)
+print(InitDevice(device_config,force_init))
 
