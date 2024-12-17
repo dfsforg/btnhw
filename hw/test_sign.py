@@ -69,7 +69,7 @@ pkey = ec.derive_private_key(
 DEFAULT_DKEK = bytes([0x1] * 32)
 print(pkey)
 device = PicoHSM()
-device.initialize(dkek_shares=1, pin="123456")
+device.initialize(dkek_shares=1)
 
 device.import_dkek(DEFAULT_DKEK)
 key_id = device.import_key(pkey, dkek=DEFAULT_DKEK)
@@ -82,5 +82,5 @@ slck.unlock_device()
 pubkey = device.public_key(key_id, param=curve().name)
 print(pubkey)
 
-signature=device.sign(keyid=key_id,data=secret_key,scheme=0x70)
-print(signature)
+#signature=device.sign(keyid=key_id,data=secret_key,scheme=0x70)
+#print(signature)

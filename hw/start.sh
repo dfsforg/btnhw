@@ -45,9 +45,8 @@ fi
 if [ "$MODE" = "test" ]; then
     echo "Running deploy+transfer test..."
     [ -e "./tmp/*" ] && rm ./tmp/*
-    #rm ./tmp/*
-    #npx hardhat node &
-    #npx hardhat compile
+    npx hardhat node &
+    npx hardhat compile
 
     #building transaction
 
@@ -58,31 +57,37 @@ if [ "$MODE" = "test" ]; then
 
     [ -e "/run/pcscd/pcscd.comm" ] && sudo rm /run/pcscd/pcscd.comm
     #sudo rm /run/pcscd/pcscd.comm
-    #sudo service pcscd start
-    sudo pcscd -f -a  &
+    sudo service pcscd start
+    #sudo pcscd -f -a  &
     #pcscd -h
     #sleep 3
-    #python3 ./unlock.py
+    python3 ./unlock.py
     #sudo
     sudo pkcs11-tool -O
     #sudo service pcscd stop
     #exit 1
-    #npx hardhat run --network localhost scripts/unsigned_deploy.ts
-    echo 111 > tmp/submit_unsigned_tnx_hash_bin
-    echo "pkcs11-tool --read-object --id 0$ID --type pubkey > tmp/1pub.der"
-    sudo pkcs11-tool --read-object  --id 0$ID --type pubkey > tmp/1pub.der
+    npx hardhat run --network localhost scripts/unsigned_deploy.ts
+    #echo 111 > tmp/submit_unsigned_tnx_hash_bin
+    #echo "pkcs11-tool --read-object --id 0$ID --type pubkey > tmp/1pub.der"
+    sudo pkcs11-tool --read-object  --id $ID --type pubkey > tmp/1pub.der
+    #python3 test_sign.py
+    #pkcs11-tool --read-object --id 31 --type pubkey
+    #pkcs11-tool --login --pin 123456 --read-object --id 31 --type pubkey
+
     #pkcs11-tool --read-object --pin $PIN --id 0$ID --type pubkey > tmp/1pub.der
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text > tmp/1pub.pem
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text | grep "    " | tr -d ' :\n' | cut -c 3- > tmp/1pub.eth
 
-    pkcs11-tool  --sign --pin $PIN --id 0$ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature_openssl.der --signature-format openssl
-    pkcs11-tool --sign --pin $PIN --id 0$ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature.der
-    openssl pkeyutl -verify -pubin -inkey tmp/1pub.pem -in tmp/submit_unsigned_tnx_hash_bin -sigfile tmp/signature_openssl.der
+    #pkcs11-tool  --sign --pin $PIN --id 0$ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature_openssl.der --signature-format openssl
+    #pkcs11-tool --sign --pin $PIN --id 0$ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature.der
+    #openssl pkeyutl -verify -pubin -inkey tmp/1pub.pem -in tmp/submit_unsigned_tnx_hash_bin -sigfile tmp/signature_openssl.der
 
-    python3 ./tnxmaster.py
+    #python3 ./tnxmaster.py
+    python3 ./tnxmaster2.py
+    #exit 0
     npx hardhat run --network localhost scripts/send_tnx.ts
     #sudo service pcscd stop
-    sleep 1
+    #sleep 1
     #npx hardhat --version
     rm ./tmp/*
 
@@ -91,11 +96,11 @@ if [ "$MODE" = "test" ]; then
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text > tmp/1pub.pem
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text | grep "    " | tr -d ' :\n' | cut -c 3- > tmp/1pub.eth
 
-    pkcs11-tool  --sign --pin $PIN --id $ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature_openssl.der --signature-format openssl
-    pkcs11-tool --sign --pin $PIN --id $ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature.der
-    openssl pkeyutl -verify -pubin -inkey tmp/1pub.pem -in tmp/submit_unsigned_tnx_hash_bin -sigfile tmp/signature_openssl.der
+#    pkcs11-tool  --sign --pin $PIN --id $ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature_openssl.der --signature-format openssl
+#    pkcs11-tool --sign --pin $PIN --id $ID --mechanism ECDSA -i tmp/submit_unsigned_tnx_hash_bin -o tmp/signature.der
+#    openssl pkeyutl -verify -pubin -inkey tmp/1pub.pem -in tmp/submit_unsigned_tnx_hash_bin -sigfile tmp/signature_openssl.der
 
-    python3 ./tnxmaster.py
+    python3 ./tnxmaster2.py
     #sudo service pcscd stop
     npx hardhat run --network localhost scripts/send_tnx.ts
     sudo service pcscd stop

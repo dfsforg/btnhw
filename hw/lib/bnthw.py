@@ -158,7 +158,7 @@ def InitDevice(device_config,force=False):
     dc = device_config.safeConfig(device_config.CONFIGFILENAME)
 
     #enabling encryption for HSM storage
-    # slck = SecureLock2(device,device_config.HSM_ACCESS_KEY)
-    # slck.enable_device_aut()
-    #slck.unlock_device()
+    slck = SecureLock2(device,device_config.HSM_ACCESS_KEY)
+    slck.enable_device_aut()
+    slck.unlock_device()
     return dc
