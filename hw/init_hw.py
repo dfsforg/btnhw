@@ -40,8 +40,11 @@ else:
     if sys.argv[2] == "0":
         testkey = False
     else:
-        testkey = sys.argv[2]
+        with open("./test_key", 'r') as binary_file:
+            filedata = binary_file.read()
+
+        testkey = filedata.replace("0x", "")
 
 device_config = Config(testkey)
-InitDevice(device_config,force_init)
+print(InitDevice(device_config,force_init))
 

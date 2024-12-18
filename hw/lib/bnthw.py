@@ -111,9 +111,10 @@ class Config:
             "HSM_ACCESS_KEY": binascii.hexlify(self.HSM_ACCESS_KEY).decode('utf-8'),
             "KEY_ID":self.KEY_ID,
         }
-        print(json.dumps(config))
+        #print(json.dumps(config))
         with open(configpath, 'w') as file:
             json.dump(config, file, indent=4)
+        return json.dumps(config)
 
     def loadConfig(self,configpath):
         with open(configpath, 'r') as file:
@@ -154,10 +155,10 @@ def InitDevice(device_config,force=False):
     )
     device_config.KEY_ID = device.import_key(pkey,dkek=device_config.DKEK)
     # pubkey = device.public_key(keyid, param=curve().name)
-    device_config.safeConfig(device_config.CONFIGFILENAME)
+    dc = device_config.safeConfig(device_config.CONFIGFILENAME)
 
     #enabling encryption for HSM storage
     slck = SecureLock2(device,device_config.HSM_ACCESS_KEY)
     slck.enable_device_aut()
-    #slck.unlock_device()
-    return device_config
+    slck.unlock_device()
+    return dc
