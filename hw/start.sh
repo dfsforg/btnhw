@@ -115,7 +115,8 @@ if [ "$MODE" = "testinithw" ]; then
     sudo service pcscd start
     #sudo pcscd -f -a -i &
     #pkcs11-tool -O
-    data=$(python3 ./init_hw.py 1 '7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6')
+    python3 ./unlock.py
+    data=$(python3 ./init_hw.py 1 1)
     sudo pkcs11-tool --pin $(jq -r '.PIN' $SIGNER) --id 31 --set-id 1 --type privkey
     sudo pkcs11-tool -O
     #pkcs11-tool --login --login-type so --so-pin $(echo $data  | jq -r '.SOPIN') --init-pin --new-pin $(echo $data  | jq -r '.PIN')
