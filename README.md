@@ -16,7 +16,7 @@ These days, it's common for blockchain developers and advanced users (who create
 
 **Prepare the Pico**
 1. Reset your pico with [PicoNuke](https://github.com/polhenarejos/pico-nuke/releases/tag/v1.2)  
-1. Download (or build on your own) the firmware.  Was tested with version 4.0.
+1. Download (or build on your own) the firmware.  Was tested with version 5.0.
 2. Patch it with a valid VID:PID . Was tested with 1050:0407.
 
 Or use the [prepared firmware from this repo](https://github.com/dfsforg/btnhw/tree/main/fw).
