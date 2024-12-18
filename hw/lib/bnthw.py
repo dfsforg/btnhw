@@ -90,8 +90,8 @@ class Config:
         self.DKEK = secrets.token_bytes(32)
         self.DKEK_SHARES = 1
         self.HSM_ACCESS_KEY = secrets.token_bytes(32)
-        self.PIN = ''.join(random.choices('0123456789', k=6))
-        self.SOPIN = ''.join(random.choices('0123456789', k=6))
+        self.PIN = ''.join(random.choices('0123456789', k=10))
+        self.SOPIN = ''.join(random.choices('0123456789', k=10))
         self.OPTIONS = 0x0001
         self.RETRIES = 3
         if testkey:
