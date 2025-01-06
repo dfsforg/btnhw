@@ -15,9 +15,10 @@ These days, it’s common for blockchain developers and advanced users—who cre
 
 
 **Prepare the Pico**
+
 1. Erase memory of your pico with [PicoNuke](https://github.com/polhenarejos/pico-nuke/releases/tag/v1.2)
-1. Build the [firmware](https://github.com/polhenarejos/pico-hsm).  Was tested with devepolment branch.
-2. Patch it with a valid VID:PID . Was tested with 1050:0407.
+2. Build the [firmware](https://github.com/polhenarejos/pico-hsm).  Was tested with devepolment branch.
+3. Patch it with a valid VID:PID . Was tested with 1050:0407.
 
 Or use the [prepared firmware from this repo](https://github.com/dfsforg/btnhw/tree/main/fw).
 
