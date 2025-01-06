@@ -18,7 +18,7 @@ echo "Checking dependencies..."
 #npm config set user 0
 #npm config set unsafe-perm true
 #npm install -g npm@8.19.2
-#npm i --save
+npm i --save
 #npm audit fix --force
 #npm uninstall @gnosis.pm/safe-deployments
 #npm audit fix
@@ -108,6 +108,7 @@ if [ "$MODE" = "testinithw" ]; then
     if [ -f "$SIGNER" ]; then
           python3 ./unlock.py
     fi
+
     data=$(python3 ./init_hw.py 1 1)
     sudo pkcs11-tool --pin $(echo $data | jq -r '.PIN') --id 31 --set-id 1 --type privkey
     sudo pkcs11-tool -O
