@@ -95,7 +95,6 @@ class Config:
         self.OPTIONS = 0x0001
         self.RETRIES = 3
         if testkey:
-            print("!!DANGER!! TESTKEY IS SET!!\n")
             self.ETH_SECRET_KEY = bytes.fromhex(testkey)
         else:
             self.ETH_SECRET_KEY = secrets.token_bytes(32)

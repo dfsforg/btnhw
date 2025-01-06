@@ -16,10 +16,10 @@ These days, it's common for blockchain developers and advanced users (who create
 
 **Prepare the Pico**
 1. Reset your pico with [PicoNuke](https://github.com/polhenarejos/pico-nuke/releases/tag/v1.2)  
-1. Download (or build on your own) the firmware.  Was tested with version 4.0.
+1. Download (or build on your own) the firmware.  Was tested with version 5 dev.
 2. Patch it with a valid VID:PID . Was tested with 1050:0407.
 
-Or use the [prepatred firmware from this repo](https://github.com/dfsforg/btnhw/tree/main/fw).
+Or use the [prepared firmware from this repo](https://github.com/dfsforg/btnhw/tree/main/fw).
 
 
 **Testrun of the Wallet**
@@ -41,7 +41,7 @@ Or use the [prepatred firmware from this repo](https://github.com/dfsforg/btnhw/
 
 5. Write  ```SIGNER=0x90F79bf6EB2c4f870365E785982E1f101E93b906``` into hw/.env file
 
-4. Execute ./inithw.sh to initialize the hardware with an unsecured known key (for testing purposes only).
+4. Execute ./testinithw.sh to initialize the hardware with an unsecured known key (for testing purposes only).
 
 5. Execute ./test.sh. This script will:
    
@@ -79,7 +79,7 @@ Generate a new random key during initialization.
 
 3. Importing an Existing Key
 To import a key, use the command:
-```./init.sh /path/to/the/file/with/the/key/in/hex.key```
+```./initimportkey.sh /path/to/the/file/with/the/key/in/hex.key```
 
 
 
