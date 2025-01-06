@@ -4,7 +4,7 @@
 
 B.T.N.H.W. is a hardware wallet designed <ins>for advanced users and developers</ins> working with EVM-compatible blockchains. It is fully open-source, highly customizable, and built using  [widely accessible components that cost only $7.85](https://www.amazon.com/Raspberry-Pi-Pico/dp/B09KVB8LVR).
 
-
+![photo_2025-01-06_20-21-31](https://github.com/user-attachments/assets/d99cd0e8-b905-4e3e-ab12-6e688ea62c59)
 
 
 ## 🤔 The reason
@@ -68,6 +68,8 @@ If there are no errors, it means that all necessary tooling is set up correctly.
 
 5. **Important:**
    Clear the Unsecure Known Key: Reinitialize the hardware to remove the unsecure known key. This step is crucial—never use the hardware wallet with a known key outside of testing.
+
+
 
 **Initialization**
 
