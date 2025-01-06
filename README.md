@@ -78,8 +78,8 @@ You have two options for initializing the wallet:
    ```./init.sh ```
 
 3. Importing an Existing Key
-   To import a key from file, use the command:
-   ```./initimportkey.sh```
+   To import a key from file, please add a path to your file [here](https://github.com/dfsforg/btnhw/blob/dev/hw/start.sh#L145)  use the command:
+   ```./initimportkey.sh``` 
 
 After any of  these operations you should see something like
 
@@ -146,7 +146,7 @@ Pico-hsm firmware makes **RP2040** be a smart card, **pcsd** provides interface 
 All packed into docker container  with all important dependencies.
 
 
-### Special thanks
+## ❤️ Special thanks
 
 It became possible thanks to the great work of [Pol Henarejos](https://github.com/polhenarejos), the creator of the pico-hsm firmware, and his team.
 
