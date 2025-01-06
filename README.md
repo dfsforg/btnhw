@@ -2,29 +2,30 @@
 
 ## 🚀 TL;DR
 
-B.T.N.H.W is a hardware wallet designed for advanced users and developers working with EVM-compatible blockchains.
+B.T.N.H.W. is a hardware wallet designed <ins>for advanced users and developers</ins> working with EVM-compatible blockchains. It is fully open-source, highly customizable, and built using  [widely accessible components that cost only $7.85](https://www.amazon.com/Raspberry-Pi-Pico/dp/B09KVB8LVR).
 
-It is fully open source, highly customizable, and built on [7.85$ widely accessible components](https://www.amazon.com/Raspberry-Pi-Pico/dp/B09KVB8LVR). 
+![photo_2025-01-06_20-21-31](https://github.com/user-attachments/assets/d99cd0e8-b905-4e3e-ab12-6e688ea62c59)
 
 
 ## 🤔 The reason
 
-These days, it's common for blockchain developers and advanced users (who create their own tools for interacting with a blockchain) to store secret keys in plaintext .env files, configurations, or software wallets. This makes secret keys an easy target for attackers. B.T.N.H.W was created to address this issue (see the security section for details).
+These days, it’s common for blockchain developers and advanced users—who create their own tools for interacting with a blockchain—to store secret keys in plaintext .env files, configuration files, or software wallets. This makes secret keys an easy target for attackers. B.T.N.H.W. was created to address this issue (see the Security section for details).
 
 ## 🛠️ How to use
 
 
 **Prepare the Pico**
-1. Reset your pico with [PicoNuke](https://github.com/polhenarejos/pico-nuke/releases/tag/v1.2)  
-1. Download (or build on your own) the firmware.  Was tested with version 5.0.
-2. Patch it with a valid VID:PID . Was tested with 1050:0407.
+
+1. Erase memory of your pico with [PicoNuke](https://github.com/polhenarejos/pico-nuke/releases/tag/v1.2)
+2. Build the [firmware](https://github.com/polhenarejos/pico-hsm).  Was tested with devepolment branch.
+3. Patch it with a valid VID:PID . Was tested with 1050:0407.
 
 Or use the [prepared firmware from this repo](https://github.com/dfsforg/btnhw/tree/main/fw).
 
 
 **Testrun of the Wallet**
 
-1. Clone the repo to your local environment.
+1. Clone this repo to your local environment.
 
 2. Connect the Pico device with the appropriate firmware installed. You should see a log entry in dmesg indicating the device has been detected.
 
@@ -44,12 +45,12 @@ Or use the [prepared firmware from this repo](https://github.com/dfsforg/btnhw/t
 4. Execute ./inithw.sh to initialize the hardware with an unsecured known key (for testing purposes only).
 
 5. Execute ./test.sh. This script will:
-   
-    Start a local Hardhat blockchain node.
-   
-    Run a few test transactions.
 
-If everything works as expected, you should see a long log ending with something like this.
+   Start a local Hardhat blockchain node.
+
+   Run a few test transactions.
+
+If everything works as expected, you should see a long log that ends with something like this:
 
 ```
 hw  | eth_sendRawTransaction
@@ -67,37 +68,42 @@ hw  | Transaction Hash: 0xc5668faf3f41b94d4c3fae4c8e4631854993e9d4cbf9321ada8b22
 If there are no errors, it means that all necessary tooling is set up correctly.
 
 5. **Important:**
-Clear the Unsecure Known Key: Reinitialize the hardware to remove the unsecured known key. This step is crucial. Never use the hardware wallet with a known key outside of testing.
+   Clear the Unsecure Known Key: Reinitialize the hardware to remove the unsecure known key. This step is crucial—never use the hardware wallet with a known key outside of testing.
+
+
 
 **Initialization**
 
 You have two options for initializing the wallet:
 
 1. With a New Random Key
-Generate a new random key during initialization.
-```./init.sh ```
+   Generate a new random key during initialization.
+   ```./init.sh ```
 
 3. Importing an Existing Key
-To import a key, use the command:
-```./init.sh /path/to/the/file/with/the/key/in/hex.key```
+   To import a key from file, please add a path to your file [here](https://github.com/dfsforg/btnhw/blob/dev/hw/start.sh#L145)  use the command:
+   ```./initimportkey.sh``` 
 
+After any of  these operations you should see something like
 
+```
+{"PIN": "3418675202", "SOPIN": "6183067871", "ETH_ADDRESS": "0x90F79bf6EB2c4f870365E785982E1f101E93b906", "HSM_ACCESS_KEY": "a8149234b06a9b2fcc5ee9a1317054217322caa39123934454ef29cd80707b17", "KEY_ID": 1}
+```
 
-Be sure to follow these steps thoroughly, especially removing the testing key, to ensure the wallet is secure for production use.
+This is a contence of a new config file, which has important data to use hardware  wallet and who's name is address  for new generated\imported key.
+```ETH_ADDRESS```  **must**   be put into hw/.env file like this:
+
+```
+SIGNER=[0x..]
+```
+
+```.env``` file contains information of which config to use. If the right config is lost or corrupted, hardware wallet should be reflashed, as it  described in  **Prepare** section of this manual.
 
 
 **Usage**
 
-Before use, you have to init wallet with 
-```./inithw.sh```
 
-then, to use generated wallet to signature, you have to write 
-```
-SIGNER=0x[new address]
-```
-into hw/.env file.
-
-You can use the tests as examples of four essential operations: 
+You can use these tests as examples of four essential operations:
 
 1. [How to prepare the required hash using Hardhat](https://github.com/dfsforg/btnhw/blob/main/hw/scripts/unsigned_deploy.ts)
 2. [How to sign it with B.T.N.H.W.](https://github.com/dfsforg/btnhw/blob/main/hw/start.sh#L61-L67)
@@ -106,12 +112,12 @@ You can use the tests as examples of four essential operations:
 
 
 
-## 🔒 Security 
+## 🔒 Security
 
 
 **B.T.N.H.W** was designed to address the following threats:
 
-    
+
 1. Workstation compromised by automated malware. "Automated malware" refers to an attack where the attacker cannot effectively communicate with the hardware wallet (HW) during the moment of its use.
 2. Stolen or lost hardware wallet. The secret key should remain unrecoverable even with full physical access to the hardware wallet.
 3. Accidental sharing of the key, such as an accidental push to version control systems.
@@ -131,16 +137,21 @@ Since the Raspberry Pi Pico has no screen (for visual confirmation) and mbedTLS 
 
 ## 🛠️ What's inside?
 
-The main building blocks are  
+The main building blocks are
 
 1. [pico-hsm](https://github.com/polhenarejos/pico-hsm)
 2. [mbedtls](https://github.com/Mbed-TLS/mbedtls)
 3. [RP2040](https://www.raspberrypi.com/documentation/microcontrollers/silicon.html#rp2040)
 
 
-Pico-hsm firmware makes **RP2040** be a smart card, **pcsd** provides interface to  smart card, **B.T.N.H.W** is a toolsuite that integrates hardhat, smart-card and all needed to create ethereum-compatible signatures. 
+Pico-hsm firmware makes **RP2040** be a smart card, **pcsd** provides interface to  smart card, **B.T.N.H.W** is a toolsuite that integrates hardhat, smart-card and all needed to create ethereum-compatible signatures.
 
-All packed into docker container  with all important dependencies. 
+All packed into docker container  with all important dependencies.
+
+
+## ❤️ Special thanks
+
+It became possible thanks to the great work of [Pol Henarejos](https://github.com/polhenarejos), the creator of the pico-hsm firmware, and his team.
 
 
 

@@ -59,22 +59,12 @@ if [ "$MODE" = "test" ]; then
     #sudo rm /run/pcscd/pcscd.comm
     sudo service pcscd start
     #sudo pcscd -f -a  &
-    #pcscd -h
-    #sleep 3
     python3 ./unlock.py
-    #sudo
     sudo pkcs11-tool -O
-    #sudo service pcscd stop
-    #exit 1
     npx hardhat run --network localhost scripts/unsigned_deploy.ts
-    #echo 111 > tmp/submit_unsigned_tnx_hash_bin
-    #echo "pkcs11-tool --read-object --id 0$ID --type pubkey > tmp/1pub.der"
     sudo pkcs11-tool --read-object  --id $ID --type pubkey > tmp/1pub.der
-    #python3 test_sign.py
-    #pkcs11-tool --read-object --id 31 --type pubkey
-    #pkcs11-tool --login --pin 123456 --read-object --id 31 --type pubkey
 
-    #pkcs11-tool --read-object --pin $PIN --id 0$ID --type pubkey > tmp/1pub.der
+
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text > tmp/1pub.pem
     openssl ec -inform DER -outform PEM -in tmp/1pub.der -pubin -text | grep "    " | tr -d ' :\n' | cut -c 3- > tmp/1pub.eth
 
@@ -84,7 +74,7 @@ if [ "$MODE" = "test" ]; then
 
     #python3 ./tnxmaster.py
     python3 ./tnxmaster2.py
-    #exit 0
+
     npx hardhat run --network localhost scripts/send_tnx.ts
     #sudo service pcscd stop
     #sleep 1
@@ -109,29 +99,51 @@ fi
 
 
 if [ "$MODE" = "testinithw" ]; then
-    echo "Starting TEST HW init procedure..."
+    echo "Starting TEST HW init procedure with test(!DANGER!) key ..."
     [ -e "/run/pcscd/pcscd.comm" ] && sudo rm /run/pcscd/pcscd.comm
     #sudo rm /run/pcscd/pcscd.comm
     sudo service pcscd start
     #sudo pcscd -f -a -i &
-    #pkcs11-tool -O
+    pkcs11-tool -O
+    if [ -f "$SIGNER" ]; then
+          python3 ./unlock.py
+    fi
 
-    #python3 ./unlock.py
     data=$(python3 ./init_hw.py 1 1)
-    sudo pkcs11-tool --pin $(jq -r '.PIN' $SIGNER) --id 31 --set-id 1 --type privkey
+    sudo pkcs11-tool --pin $(echo $data | jq -r '.PIN') --id 31 --set-id 1 --type privkey
     sudo pkcs11-tool -O
     #pkcs11-tool --login --login-type so --so-pin $(echo $data  | jq -r '.SOPIN') --init-pin --new-pin $(echo $data  | jq -r '.PIN')
     echo $data
+    echo  "!!DANGER!! TESTKEY IS SET!!\n"
 
 fi
 
 if [ "$MODE" = "inithw" ]; then
-    echo "Starting HW init procedure..."
+    echo "Starting HW init procedure with new key generation..."
     #sudo rm /run/pcscd/pcscd.comm
     [ -e "/run/pcscd/pcscd.comm" ] && sudo rm /run/pcscd/pcscd.comm
     sudo service pcscd start
     pkcs11-tool -O
+    if [ -f "$SIGNER" ]; then
+          python3 ./unlock.py
+    fi
     data=$(python3 ./init_hw.py 1 0 )
+
+    sudo pkcs11-tool --pin $(echo $data | jq -r '.PIN') --id 31 --set-id 1 --type privkey
+    sudo pkcs11-tool -O
+    echo $data
+fi
+
+if [ "$MODE" = "initimportkey" ]; then
+    echo "Starting HW init procedure with key import..."
+    [ -e "/run/pcscd/pcscd.comm" ] && sudo rm /run/pcscd/pcscd.comm
+    sudo service pcscd start
+    pkcs11-tool -O
+    if [ -f "$SIGNER" ]; then
+          python3 ./unlock.py
+    fi
+    data=$(python3 ./init_hw.py 1 ./test_key )   # use a path for your key
+    #echo $data
 
     sudo pkcs11-tool --pin $(echo $data | jq -r '.PIN') --id 31 --set-id 1 --type privkey
     sudo pkcs11-tool -O

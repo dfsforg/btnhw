@@ -29,22 +29,25 @@ from lib.bnthw import InitDevice
 
 if len(sys.argv) < 3:
     force_init = False
-    testkey = False
+    key2import = False
 else:
     if sys.argv[1] == "0":
         force_init = False
     else:
         force_init = True
 
-    #print(sys.argv[2])
     if sys.argv[2] == "0":
-        testkey = False
-    else:
+        key2import = False
+    elif sys.argv[2] == "1":
         with open("./test_key", 'r') as binary_file:
             filedata = binary_file.read()
+        key2import = filedata.replace("0x", "")
+    else:
+        with open(sys.argv[2], 'r') as binary_file:
+            filedata = binary_file.read()
+        key2import = filedata.replace("0x", "")
+        #print(key2import)
 
-        testkey = filedata.replace("0x", "")
-
-device_config = Config(testkey)
+device_config = Config(key2import)
 print(InitDevice(device_config,force_init))
 
