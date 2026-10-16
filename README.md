@@ -1,5 +1,6 @@
 # BETTER THEN NOTHING HARDWARE WALLET
 
+Powered by 玄探工房 for DFSF
 ## 🚀 TL;DR
 
 B.T.N.H.W. is a hardware wallet designed <ins>for advanced users and developers</ins> working with EVM-compatible blockchains. It is fully open-source, highly customizable, and built using  [widely accessible components that cost only $7.85](https://www.amazon.com/Raspberry-Pi-Pico/dp/B09KVB8LVR).
